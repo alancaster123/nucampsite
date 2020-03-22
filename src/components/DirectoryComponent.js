@@ -55,6 +55,8 @@ class Directory extends Component {
         <div className="row">
           {directory}
           <div>
+            {/*Render the CampsiteInfo component. Pass the selectedCampsite object as props to the campsite component
+    using the attribute name of "campsite"*/}
             <CampsiteInfo campsite={this.state.selectedCampsite} />
           </div>
         </div>
