@@ -13,6 +13,8 @@ class Main extends Component {
     };
   }
 
+  //Method fires when campstie is clicked, campsite object will get passed into it.
+
   onCampsiteSelect(campsiteId) {
     this.setState({ selectedCampsite: campsiteId });
   }
