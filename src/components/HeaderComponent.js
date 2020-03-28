@@ -9,7 +9,7 @@ import {
   Jumbotron
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import { findAllByTestId } from '@testing-library/react';
+//import { findAllByTestId } from '@testing-library/react';//
 
 class Header extends Component {
   constructor(props) {
