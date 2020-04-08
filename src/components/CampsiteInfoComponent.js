@@ -11,20 +11,20 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  Label
+  Label,
 } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
-const maxLength = len => val => !val || val.length <= len;
-const minLength = len => val => val && val.length >= len;
+const maxLength = (len) => (val) => !val || val.length <= len;
+const minLength = (len) => (val) => val && val.length >= len;
 
 class CommentForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isModalOpen: false
+      isModalOpen: false,
     };
 
     this.toggleModal = this.toggleModal.bind(this);
@@ -33,18 +33,17 @@ class CommentForm extends Component {
 
   toggleModal() {
     this.setState({
-      isModalOpen: !this.state.isModalOpen
+      isModalOpen: !this.state.isModalOpen,
     });
   }
 
   handleSubmit(values) {
-    console.log(
-      //`Rating: ${this.rating.value} Author: ${this.author.value} Text: ${this.text.value}`
-      'Current state is ' + JSON.stringify(values)
-    );
-    alert(
-      //`Rating: ${this.rating.value} Author: ${this.author.value} Text: ${this.text.value}`
-      'Current state is ' + JSON.stringify(values)
+    this.toggleModal();
+    this.props.addComment(
+      this.props.campsiteId,
+      values.rating,
+      values.author,
+      values.text
     );
   }
 
@@ -60,7 +59,7 @@ class CommentForm extends Component {
           <ModalHeader toggle={this.toggleModal}> Submit Comment </ModalHeader>
           <ModalBody>
             <LocalForm
-              onSubmit={values => {
+              onSubmit={(values) => {
                 this.handleSubmit(values);
               }}
             >
@@ -89,7 +88,7 @@ class CommentForm extends Component {
                   placeholder="Your Name"
                   validators={{
                     minLength: minLength(2),
-                    maxLength: maxLength(15)
+                    maxLength: maxLength(15),
                   }}
                 />
                 <Errors
@@ -99,7 +98,7 @@ class CommentForm extends Component {
                   component="div"
                   messages={{
                     minLength: 'Must be at least 2 characters',
-                    maxLength: 'Must be 15 characters or less'
+                    maxLength: 'Must be 15 characters or less',
                   }}
                 />
               </div>
@@ -141,12 +140,12 @@ function RenderCampsite({ campsite }) {
 /* This render method checks to see if comments are there. If so, use the array method map 
   on the comments array.  Inside the callback function return comment in 2 lines*/
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, campsiteId }) {
   if (comments) {
     return (
       <div className="col-md-5 m-1">
         <h4> Comments </h4>
-        {comments.map(comment => {
+        {comments.map((comment) => {
           return (
             <div key={comment.id}>
               <p>
@@ -156,14 +155,14 @@ function RenderComments({ comments }) {
                 {new Intl.DateTimeFormat('en-US', {
                   year: 'numeric',
                   month: 'short',
-                  day: '2-digit'
+                  day: '2-digit',
                 }).format(new Date(Date.parse(comment.date)))}{' '}
               </p>{' '}
             </div>
           );
         })}
         <div>
-          <CommentForm />
+          <CommentForm campsiteId={campsiteId} addComment={addComment} />
         </div>
       </div>
     );
@@ -192,7 +191,11 @@ function CampsiteInfo(props) {
         </div>
         <div className="row">
           <RenderCampsite campsite={props.campsite} />
-          <RenderComments comments={props.comments} />
+          <RenderComments
+            comments={props.comments}
+            addComment={props.addComment}
+            campsiteId={props.campsite.id}
+          />
         </div>
       </div>
     );
