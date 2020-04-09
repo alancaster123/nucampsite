@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
 
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
@@ -174,6 +175,26 @@ function RenderComments({ comments, addComment, campsiteId }) {
   If so, call the renderCampsite method (remember to use this) and pass the campsite to it.
   Lastly, add the renderComments method and pass the object's comments array*/
 function CampsiteInfo(props) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+  if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{props.errMess}</h4>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (props.campsite) {
     return (
       <div className="container">
