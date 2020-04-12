@@ -5,15 +5,23 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Media
+  Media,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { FadeTransform } from 'react-animation-components';
+import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 function RenderPartner({ partner }) {
   if (partner) {
     return (
       <Fragment>
-        <Media object width="150" src={partner.image} alt={partner.name} />
+        <Media
+          object
+          width="150"
+          src={baseUrl + partner.image}
+          alt={partner.name}
+        />
         <Media body className="ml-5 mb-4">
           <Media heading>{partner.name}</Media>
           {partner.description}
@@ -24,15 +32,43 @@ function RenderPartner({ partner }) {
   return <div />;
 }
 
-function About(props) {
-  const partners = props.partners.map(partner => {
+function PartnerList(props) {
+  const partners = props.partners.partners.map((partner) => {
     return (
       <Media tag="li" key={partner.id}>
         <RenderPartner partner={partner} />
       </Media>
     );
   });
+  if (props.partners.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+  if (props.partners.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{props.errMess}</h4>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="col mt-4">
+      <Media list>{partners}</Media>
+    </div>
+  );
+  // });
+}
 
+function About(props) {
   return (
     <div className="container">
       <div className="row">
@@ -61,23 +97,30 @@ function About(props) {
           </p>
         </div>
         <div className="col-sm-6">
-          <Card>
-            <CardHeader className="bg-primary text-white">
-              <h3>Facts At a Glance</h3>
-            </CardHeader>
-            <CardBody>
-              <dl className="row">
-                <dt className="col-6">Founded</dt>
-                <dd className="col-6">February 3, 2016</dd>
-                <dt className="col-6">No. of Campsites in 2019</dt>
-                <dd className="col-6">563</dd>
-                <dt className="col-6">No. of Reviews in 2019</dt>
-                <dd className="col-6">4388</dd>
-                <dt className="col-6">Employees</dt>
-                <dd className="col-6">42</dd>
-              </dl>
-            </CardBody>
-          </Card>
+          <FadeTransform
+            in
+            transformProps={{
+              exitTransform: 'scale(1.5) translateX(80%)',
+            }}
+          >
+            <Card>
+              <CardHeader className="bg-primary text-white">
+                <h3>Facts At a Glance</h3>
+              </CardHeader>
+              <CardBody>
+                <dl className="row">
+                  <dt className="col-6">Founded</dt>
+                  <dd className="col-6">February 3, 2016</dd>
+                  <dt className="col-6">No. of Campsites in 2019</dt>
+                  <dd className="col-6">563</dd>
+                  <dt className="col-6">No. of Reviews in 2019</dt>
+                  <dd className="col-6">4388</dd>
+                  <dt className="col-6">Employees</dt>
+                  <dd className="col-6">42</dd>
+                </dl>
+              </CardBody>
+            </Card>
+          </FadeTransform>
         </div>
         <div className="col">
           <Card className="bg-light mt-3">
@@ -102,12 +145,14 @@ function About(props) {
         <div className="col-12">
           <h3>Community Partners</h3>
         </div>
-        <div className="col mt-4">
-          <Media list>{partners}</Media>
-        </div>
+        <PartnerList partners={props.partners} />
       </div>
     </div>
   );
 }
 
 export default About;
+
+//function PartnerList
+//const PartnerList =
+//partners = {props.partners}
